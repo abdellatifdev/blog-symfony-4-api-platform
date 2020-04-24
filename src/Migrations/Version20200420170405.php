@@ -22,7 +22,7 @@ final class Version20200420170405 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE user CHANGE roles roles JSON DEFAULT NULL');
+        $this->addSql('ALTER TABLE user ADD roles JSON DEFAULT NULL');
     }
 
     public function down(Schema $schema) : void
