@@ -13,4 +13,17 @@ class JWTCreatedListener
     {
         $this->requestStack = $requestStack;
     }
+
+    /**
+     * @param JWTCreatedEvent $event
+     *
+     * @return void
+     */
+    public function onJWTCreated(JWTCreatedEvent $event)
+    {
+        $user = $event->getUser();
+        $data = $event->getData();
+        $data['id'] = $user->getId();
+        $event->setData($data); 
+    }
 }
