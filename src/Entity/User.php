@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -13,8 +14,30 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\HasLifecycleCallbacks()
- * @ApiResource(
- *      collectionOperations={
+ * * @ApiResource(
+ *     itemOperations={
+ *         "get"={
+ *             "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
+ *             "normalization_context"={
+ *                 "groups"={"get"}
+ *             }
+ *         },
+ *         "put"={
+ *             "access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object == user",
+ *             "denormalization_context"={
+ *                 "groups"={"put"}
+ *             },
+ *             "normalization_context"={
+ *                 "groups"={"get"}
+ *             }
+ *         },
+ *     },
+ *     collectionOperations={
+ *         "get"={
+ *             "normalization_context"={
+ *                 "groups"={"get"}
+ *            },
+ *          },
  *         "post"={
  *             "denormalization_context"={
  *                 "groups"={"post"}
@@ -23,26 +46,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *                 "groups"={"get"}
  *             },
  *             "validation_groups"={"post"}
- *         },
- *         "get"
+ *         }
  *     },
- *      itemOperations={
- *         "put"={
- *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object == user",
- *              "denormalization_context"={
- *                 "groups"={"put"}
- *             },
- *             "normalization_context"={
- *                 "groups"={"get"}
- *             },
- *          },
- *          "get"={
- *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
- *              "normalization_context"={
- *                 "groups"={"get"}
- *             }
- *          }  
- *     }
  * )
  */
 class User implements UserInterface
@@ -116,6 +121,7 @@ class User implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Post", mappedBy="author")
      * @Groups({"get"})
+     * @ApiSubresource()
      */
     private $posts;
 
