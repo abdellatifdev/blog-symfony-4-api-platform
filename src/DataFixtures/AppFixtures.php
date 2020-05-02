@@ -29,7 +29,7 @@ class AppFixtures extends Fixture
             $user->setBirthday($faker->dateTime());
             $manager->persist($user);
             
-            for($k = 0;$k < mt_rand(5,10);$k++){
+            for($k = 0;$k < mt_rand(15,30);$k++){
                 $post = new Post();
                 $post->setTitle($faker->realText(40));
                 $post->setContent($faker->realText());

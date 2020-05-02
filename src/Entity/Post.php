@@ -6,67 +6,94 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PostRepository")
  * @ORM\HasLifecycleCallbacks()
  * @ApiResource(
- *      normalizationContext={
- *          "groups"={"get_posts"}
- *     }
+ *    itemOperations={
+ *         "get"={
+ *             "access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object.getAuthor() == user", 
+ *             "normalization_context"={
+ *                 "groups"={"get"}
+ *             }
+ *          },
+ *         "put"={
+ *             "access_control"="object.getAuthor() == user"
+ *         }
+ *     },
+ *     collectionOperations={
+ *         "get",
+ *         "post"={
+ *             "denormalization_context"={
+ *                 "groups"={"post"}
+ *             },
+ *             "normalization_context"={
+ *                 "groups"={"get"}
+ *             },
+ *             
+ *         }
+ *     },   
  * )
  */
-class Post
+class Post implements AuthoredEntityInterface
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"get_posts"})
+     * @Groups({"get"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=155)
-     * @Groups({"get_posts"})
+     * @Groups({"get","put","post"})
+     * @Assert\NotBlank()
+     * @Assert\Length(min=10)
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"get_posts"})
+     * @Groups({"get","put","post"})
+     * @Assert\NotBlank()
+     * @Assert\Length(min=20)
      */
     private $content;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"get_posts"})
+     * @Groups({"get"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"get_posts"})
+     * @Groups({"get"})
      */
     private $updatedAt;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"get_posts"})
+     * @Groups({"get","put","post"})
      */
-    private $isPulished = true;
+    private $isPulished;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="posts")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"get_posts"})
+     * @Groups({"get"})
      */
     private $author;
 
     /**
      * @ORM\Column(type="string", length=155)
-     * @Groups({"get_posts"})
+     * @Groups({"get","put","post"})
+     * @Assert\NotBlank()
      */
     private $slug;
 
@@ -146,7 +173,7 @@ class Post
         return $this->author;
     }
 
-    public function setAuthor(?User $author): self
+    public function setAuthor(?UserInterface $author): AuthoredEntityInterface
     {
         $this->author = $author;
 
