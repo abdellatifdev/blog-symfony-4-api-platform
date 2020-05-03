@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *         "get"={
  *             "access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object.getAuthor() == user", 
  *             "normalization_context"={
- *                 "groups"={"get"}
+ *                 "groups"={"post-with-author"},                
  *             }
  *          },
  *         "put"={
@@ -45,13 +45,13 @@ class Post implements AuthoredEntityInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"get"})
+     * @Groups({"get","post-with-author"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=155)
-     * @Groups({"get","put","post"})
+     * @Groups({"get","put","post","post-with-author"})
      * @Assert\NotBlank()
      * @Assert\Length(min=10)
      */
@@ -59,7 +59,7 @@ class Post implements AuthoredEntityInterface
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"get","put","post"})
+     * @Groups({"get","put","post","post-with-author"})
      * @Assert\NotBlank()
      * @Assert\Length(min=20)
      */
@@ -73,26 +73,26 @@ class Post implements AuthoredEntityInterface
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"get"})
+     * @Groups({"get","post-with-author"})
      */
     private $updatedAt;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"get","put","post"})
+     * @Groups({"get","put","post","post-with-author"})
      */
     private $isPulished;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="posts")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"get"})
+     * @Groups({"post-with-author"})
      */
     private $author;
 
     /**
      * @ORM\Column(type="string", length=155)
-     * @Groups({"get","put","post"})
+     * @Groups({"get","put","post","post-with-author"})
      * @Assert\NotBlank()
      */
     private $slug;
