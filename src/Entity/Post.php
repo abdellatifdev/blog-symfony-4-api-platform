@@ -23,7 +23,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          },
  *         "put"={
  *             "access_control"="object.getAuthor() == user"
- *         }
+ *         },
+ *         "delete"={
+ *             "access_control"="object.getAuthor() == user"
+ *          }
  *     },
  *     collectionOperations={
  *         "get",
