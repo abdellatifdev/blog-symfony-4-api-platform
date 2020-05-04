@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
@@ -20,7 +22,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
  * @ApiResource(
  *    attributes={
  *          "order"={"createdAt": "DESC"},
- *          "pagination_enabled"=true
+ *          "pagination_enabled"=true,
+ *          "pagination_client_items_per_page"=true,
  *    },  
  *    itemOperations={
  *         "get"={
@@ -53,7 +56,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
  *     },   
  * )
  * @ApiFilter(BooleanFilter::class, properties={"isPulished"})
- * @ApiFilter(SearchFilter::class, properties={"slug": "exact"})
+ * @ApiFilter(SearchFilter::class, properties={"slug": "exact","title"="partial"})
  */
 class Post implements AuthoredEntityInterface
 {
@@ -69,7 +72,6 @@ class Post implements AuthoredEntityInterface
      * @ORM\Column(type="string", length=155)
      * @Groups({"get","put","post","post-with-author"})
      * @Assert\NotBlank()
-     * @Assert\Length(min=10)
      */
     private $title;
 
@@ -110,9 +112,18 @@ class Post implements AuthoredEntityInterface
      * @ORM\Column(type="string", length=155,unique=true)
      * @Gedmo\Slug(fields={"title"})
      * @Groups({"get","put","post","post-with-author"})
-     * @Assert\NotBlank()
      */
     private $slug;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="post")
+     */
+    private $comments;
+
+    public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -205,6 +216,37 @@ class Post implements AuthoredEntityInterface
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getPost() === $this) {
+                $comment->setPost(null);
+            }
+        }
 
         return $this;
     }
