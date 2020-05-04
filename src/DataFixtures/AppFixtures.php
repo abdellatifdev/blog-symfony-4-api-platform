@@ -33,7 +33,7 @@ class AppFixtures extends Fixture
                 $post = new Post();
                 $post->setTitle($faker->realText(40));
                 $post->setContent($faker->realText());
-                $post->setSlug($faker->slug());
+              //  $post->setSlug($faker->slug());
                 $post->setAuthor($user);
                 $post->setIsPulished((bool)random_int(0, 1));
                 $manager->persist($post);

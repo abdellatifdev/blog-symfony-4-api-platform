@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PostRepository")
@@ -93,7 +94,8 @@ class Post implements AuthoredEntityInterface
     private $author;
 
     /**
-     * @ORM\Column(type="string", length=155)
+     * @ORM\Column(type="string", length=155,unique=true)
+     * @Gedmo\Slug(fields={"title"})
      * @Groups({"get","put","post","post-with-author"})
      * @Assert\NotBlank()
      */
