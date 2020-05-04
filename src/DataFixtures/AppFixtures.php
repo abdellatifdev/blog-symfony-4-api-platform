@@ -35,6 +35,7 @@ class AppFixtures extends Fixture
                 $post->setContent($faker->realText());
                 $post->setSlug($faker->slug());
                 $post->setAuthor($user);
+                $post->setIsPulished((bool)random_int(0, 1));
                 $manager->persist($post);
             }
         }

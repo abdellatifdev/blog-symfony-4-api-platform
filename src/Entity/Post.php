@@ -16,7 +16,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiResource(
  *    itemOperations={
  *         "get"={
- *             "access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object.getAuthor() == user", 
  *             "normalization_context"={
  *                 "groups"={"post-with-author"},                
  *             }
@@ -70,7 +69,7 @@ class Post implements AuthoredEntityInterface
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"get"})
+     * @Groups({"get","post-with-author"})
      */
     private $createdAt;
 

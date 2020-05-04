@@ -21,6 +21,12 @@ security:
             anonymous: true
             methods: [POST]
 
+        public_posts:
+            pattern:  ^/api/posts
+            stateless: true
+            anonymous: true
+            methods: [GET]
+
         login:
             pattern:  ^/api/login
             stateless: true
