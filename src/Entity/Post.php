@@ -10,11 +10,18 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PostRepository")
  * @ORM\HasLifecycleCallbacks()
  * @ApiResource(
+ *    attributes={
+ *          "order"={"createdAt": "DESC"},
+ *          "pagination_enabled"=true
+ *    },  
  *    itemOperations={
  *         "get"={
  *             "normalization_context"={
@@ -29,7 +36,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *          }
  *     },
  *     collectionOperations={
- *         "get",
+ *         "get"={
+ *            "normalization_context"={
+ *                 "groups"={"post-with-author"},    
+ *              }            
+ *         },
  *         "post"={
  *             "denormalization_context"={
  *                 "groups"={"post"}
@@ -41,6 +52,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *         }
  *     },   
  * )
+ * @ApiFilter(BooleanFilter::class, properties={"isPulished"})
+ * @ApiFilter(SearchFilter::class, properties={"slug": "exact"})
  */
 class Post implements AuthoredEntityInterface
 {
