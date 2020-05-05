@@ -25,11 +25,11 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
  *          "order"={"createdAt": "DESC"},
  *          "pagination_enabled"=true,
  *          "pagination_client_items_per_page"=true,
- *    },  
+ *    },
  *    itemOperations={
  *         "get"={
  *             "normalization_context"={
- *                 "groups"={"post-with-author","comment-with-author"},                
+ *                 "groups"={"post-with-author"},                
  *             }
  *          },
  *         "put"={
@@ -105,7 +105,7 @@ class Post implements AuthoredEntityInterface
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="posts")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"post-with-author","comment-with-author"})
+     * @Groups({"post-with-author"})
      */
     private $author;
 
@@ -118,8 +118,8 @@ class Post implements AuthoredEntityInterface
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="post")
-     * @Groups({"post-with-author"})
      * @ApiSubresource()
+     * @Groups({"post-with-author"})
      */
     private $comments;
 
