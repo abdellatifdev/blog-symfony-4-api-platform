@@ -65,19 +65,19 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"get","post-with-author"})
+     * @Groups({"get","post-with-author","comment-with-author"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({"get","put","post-with-author"})
+     * @Groups({"get","put","post-with-author","comment-with-author"})
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({"get","put","post-with-author"})
+     * @Groups({"get","put","post-with-author","comment-with-author"})
      */
     private $lastName;
 

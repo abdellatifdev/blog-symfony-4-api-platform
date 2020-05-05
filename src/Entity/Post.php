@@ -117,6 +117,7 @@ class Post implements AuthoredEntityInterface
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="post")
+     * @Groups({"post-with-author"})
      */
     private $comments;
 
