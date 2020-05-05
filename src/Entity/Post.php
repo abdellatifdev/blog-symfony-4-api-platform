@@ -15,6 +15,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PostRepository")
@@ -28,7 +29,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
  *    itemOperations={
  *         "get"={
  *             "normalization_context"={
- *                 "groups"={"post-with-author"},                
+ *                 "groups"={"post-with-author","comment-with-author"},                
  *             }
  *          },
  *         "put"={
@@ -104,7 +105,7 @@ class Post implements AuthoredEntityInterface
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="posts")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"post-with-author"})
+     * @Groups({"post-with-author","comment-with-author"})
      */
     private $author;
 
@@ -118,6 +119,7 @@ class Post implements AuthoredEntityInterface
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="post")
      * @Groups({"post-with-author"})
+     * @ApiSubresource()
      */
     private $comments;
 

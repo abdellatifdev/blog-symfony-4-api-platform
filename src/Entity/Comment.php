@@ -57,7 +57,7 @@ class Comment implements AuthoredEntityInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
-     * @Groups({"post-with-author"})
+     * @Groups({"post-with-author","comment-with-author"})
      */
     private $author;
 
