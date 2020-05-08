@@ -123,6 +123,14 @@ class Post implements AuthoredEntityInterface
      */
     private $comments;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\PostKind", inversedBy="posts")
+     * @ORM\JoinColumn(nullable=false)
+     * @Groups({"get","put","post","post-with-author"})
+     * @Assert\NotBlank()
+     */
+    private $postKind;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -250,6 +258,18 @@ class Post implements AuthoredEntityInterface
                 $comment->setPost(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPostKind(): ?PostKind
+    {
+        return $this->postKind;
+    }
+
+    public function setPostKind(?PostKind $postKind): self
+    {
+        $this->postKind = $postKind;
 
         return $this;
     }

@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Post;
+use App\Entity\PostKind;
 use Faker\Factory;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -18,6 +19,14 @@ class AppFixtures extends Fixture
     }
     public function load(ObjectManager $manager)
     {
+        $kinds = ['Technology','Style','Culture','Politics',
+                'Opinion','Health','Business','Travel'];
+        for($i = 0;$i<sizeof($kinds);$i++){
+            $kind = new PostKind();
+            $kind->setName($kinds[$i]);
+            $manager->persist($kind);
+            $this->addReference('kind_'.$i,$kind);
+        }
         $faker = Factory::create('fr_Fr');
         for($i = 0;$i < 10;$i++){
             $user = new User();
@@ -33,12 +42,14 @@ class AppFixtures extends Fixture
                 $post = new Post();
                 $post->setTitle($faker->realText(40));
                 $post->setContent($faker->realText());
-              //  $post->setSlug($faker->slug());
                 $post->setAuthor($user);
                 $post->setIsPulished((bool)random_int(0, 1));
+                $kind = $this->getReference("kind_".rand(0, 7));
+                $post->setPostKind($kind);
                 $manager->persist($post);
             }
         }
+
         $manager->flush();
     }
 }
