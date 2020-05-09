@@ -57,7 +57,7 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
  *     },   
  * )
  * @ApiFilter(BooleanFilter::class, properties={"isPulished"})
- * @ApiFilter(SearchFilter::class, properties={"slug": "exact","title"="partial"})
+ * @ApiFilter(SearchFilter::class, properties={"slug": "exact","title"="partial","postKind.name"="exact"})
  */
 class Post implements AuthoredEntityInterface
 {
