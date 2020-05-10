@@ -21,13 +21,14 @@ class PostKind
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"get-user-posts","post-with-author"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=155)
-     * @Groups({"post-with-author"})
      * @Assert\NotBlank()
+     * @Groups({"get-user-posts","post-with-author"})
      */
     private $name;
 

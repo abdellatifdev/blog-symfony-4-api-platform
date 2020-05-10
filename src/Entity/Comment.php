@@ -14,20 +14,22 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
  * @ORM\HasLifecycleCallbacks()
  * @ApiResource(
+ *    subresourceOperations={
+ *          "api_posts_comments_get_subresource"={
+ *                 "normalization_context"={
+ *                      "groups"={"get-author-with-comment"}
+ *             }
+ *         },
+ *    },
  *    attributes={
  *          "order"={"createdAt": "DESC"},
  *    },
  *     collectionOperations={
  *         "post"={
  *             "normalization_context"={
- *                 "groups"={"get-comment-with-author"}
+ *                 "groups"={"get"}
  *             },             
  *         },
- *         "api_posts_comments_get_subresource"={
- *             "normalization_context"={
- *                 "groups"={"get-comment-with-author"}
- *             }
- *         }
  *     },   
  * )
  */
@@ -37,7 +39,7 @@ class Comment implements AuthoredEntityInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"get-comment-with-author"})
+     * @Groups({"get-author-with-comment"})
      */
     private $id;
 
@@ -45,19 +47,19 @@ class Comment implements AuthoredEntityInterface
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
      * @Groups({"post"})
-     * @Groups({"get-comment-with-author"})
+     * @Groups({"get-author-with-comment"})
      */
     private $content;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"get-comment-with-author"})
+     * @Groups({"get-author-with-comment"})
      */
     private $createdAt;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
-     * @Groups({"get-comment-with-author"})
+     * @Groups({"get-author-with-comment"})
      */
     private $author;
 

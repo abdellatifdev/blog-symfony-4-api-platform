@@ -18,17 +18,17 @@ use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
  * @ORM\HasLifecycleCallbacks()
  * @ApiResource(
  *     itemOperations={
- *         "get"={
- *             "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
- *             "normalization_context"={
- *                 "groups"={"get"}
- *             }
- *         },
  *         "put"={
  *             "access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object == user",
  *             "denormalization_context"={
  *                 "groups"={"put"}
  *             },
+ *             "normalization_context"={
+ *                 "groups"={"get"}
+ *             }
+ *         },
+ *         "get"={
+ *             "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
  *             "normalization_context"={
  *                 "groups"={"get"}
  *             }
@@ -66,36 +66,45 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"get","post-with-author","get-comment-with-author"})
+     * @Groups({"get","post-with-author","get-author-with-comment"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({"get","put","post-with-author","get-comment-with-author"})
+     * @Groups({"get","put","post","post-with-author","get-author-with-comment"})
+     * @Assert\NotBlank(groups={"post", "put"})
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({"get","put","post-with-author","get-comment-with-author"})
+     * @Groups({"get","put","post","post-with-author","get-author-with-comment"})
+     * @Assert\NotBlank(groups={"post", "put"})
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=155)
-     * @Groups({"get"})
+     * @Groups({"get","post"})
+     * @Assert\NotBlank(groups={"post", "put"})
+     * @Assert\Email(groups={"post", "put"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({"get"})
+     * @Groups({"get","post"})
+     * @Assert\NotBlank(groups={"post"})
+     * @Assert\Length(min=6, max=50,groups={"post", "put"})
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(groups={"post", "put"})
+     * @Assert\Length(min=6, max=50,groups={"post", "put"})
+     * @Groups({"post","put"})
      */
     private $password;
 
@@ -116,13 +125,15 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"get","put"})
+     * @Groups({"get","put","post"})
+     * @Assert\NotBlank(groups={"post", "put"})
+     * @Assert\Date(groups={"post", "put"})
      */
     private $birthday;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Post", mappedBy="author")
-     * @Groups({"get"})
+     * @Groups({"get-user-posts"})
      * @ApiSubresource()
      */
     private $posts;

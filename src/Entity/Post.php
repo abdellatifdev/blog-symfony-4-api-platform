@@ -21,6 +21,14 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
  * @ORM\Entity(repositoryClass="App\Repository\PostRepository")
  * @ORM\HasLifecycleCallbacks()
  * @ApiResource(
+ *    subresourceOperations={
+ *          "api_users_posts_get_subresource"={
+ *                 "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
+ *                 "normalization_context"={
+ *                 "groups"={"get-user-posts"}
+ *             }
+ *         },
+ *    },
  *    attributes={
  *          "order"={"createdAt": "DESC"},
  *          "pagination_enabled"=true,
@@ -51,9 +59,8 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
  *             },
  *             "normalization_context"={
  *                 "groups"={"get"}
- *             },
- *             
- *         }
+ *             },             
+ *         },
  *     },   
  * )
  * @ApiFilter(BooleanFilter::class, properties={"isPulished"})
@@ -65,13 +72,13 @@ class Post implements AuthoredEntityInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"get","post-with-author"})
+     * @Groups({"get","post-with-author","get-user-posts"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=155)
-     * @Groups({"get","put","post","post-with-author"})
+     * @Groups({"get","put","post","post-with-author","get-user-posts"})
      * @Assert\NotBlank()
      */
     private $title;
@@ -86,19 +93,19 @@ class Post implements AuthoredEntityInterface
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"get","post-with-author"})
+     * @Groups({"get","post-with-author","get-user-posts"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"get","post-with-author"})
+     * @Groups({"get","post-with-author","get-user-posts"})
      */
     private $updatedAt;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"get","put","post","post-with-author"})
+     * @Groups({"get","put","post","post-with-author","get-user-posts"})
      */
     private $isPulished;
 
@@ -112,7 +119,7 @@ class Post implements AuthoredEntityInterface
     /**
      * @ORM\Column(type="string", length=155,unique=true)
      * @Gedmo\Slug(fields={"title"})
-     * @Groups({"get","put","post","post-with-author"})
+     * @Groups({"get","put","post","post-with-author","get-user-posts"})
      */
     private $slug;
 
@@ -126,8 +133,8 @@ class Post implements AuthoredEntityInterface
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\PostKind", inversedBy="posts")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"get","put","post","post-with-author"})
      * @Assert\NotBlank()
+     * @Groups({"post-with-author","get-user-posts"})
      */
     private $postKind;
 
