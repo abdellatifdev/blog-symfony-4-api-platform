@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 
-class UserRegistrationSubscriber implements EventSubscriberInterface
+class UserRegistrationSubscriber 
 {
 
     // private $jWTCreatedEvent;

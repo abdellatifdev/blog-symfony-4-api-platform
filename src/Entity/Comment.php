@@ -30,7 +30,16 @@ use Symfony\Component\Validator\Constraints as Assert;
  *                 "groups"={"get"}
  *             },             
  *         },
- *     },   
+ *     }, 
+ *     itemOperations={
+ *         "get",
+ *         "put"={
+ *             "access_control"="object.getAuthor() == user"
+ *         },
+ *         "delete"={
+ *             "access_control"="object.getAuthor() == user"
+ *          }
+ *     }
  * )
  */
 class Comment implements AuthoredEntityInterface
