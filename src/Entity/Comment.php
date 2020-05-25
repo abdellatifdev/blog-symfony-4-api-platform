@@ -74,6 +74,7 @@ class Comment implements AuthoredEntityInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Post", inversedBy="comments")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      * @Groups({"post"})
      */
     private $post;
